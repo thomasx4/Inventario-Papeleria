@@ -126,4 +126,16 @@ public class CategoriesService {
 
         return response;
     }
+
+    //----------------------------------------------------------------------------------------------
+    //Delete categories
+
+    public void deleteCategory (Long id){
+        Categories categories = categoriesRepository.findById(id).
+        orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+        categoriesRepository.delete(categories);
+
+
+        
+    }
 }
