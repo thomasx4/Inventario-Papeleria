@@ -1,6 +1,9 @@
 package com.inventario.papeleria.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -51,4 +54,118 @@ public class MovementService {
 
         return response;
     }
+
+    //----------------------------------------------------------------------------------------------    
+    // Get movement
+
+    public List<MovementResponseDTO> getMovements() {
+        List<Movement> movements = movementRepository.findAll();
+        List<MovementResponseDTO> listResponse = new ArrayList<>();
+
+        for (Movement movement : movements) {
+            MovementResponseDTO response = new MovementResponseDTO();
+            response.setId(movement.getId());
+            response.setType(movement.getType());
+            response.setAmount(movement.getAmount());
+            response.setDate(movement.getDate());
+            response.setDescription(movement.getDescription());
+            response.setProductId(movement.getProduct().getId());
+            response.setProductName(movement.getProduct().getName());
+            response.setUserName(movement.getUser().getName());
+            listResponse.add(response);
+        }
+        return listResponse;
+    }
+
+
+//----------------------------------------------------------------------------------------------
+    // Get movement by Type
+
+    public List<MovementResponseDTO> getMovementsByType(String type) {
+        List<Movement> movements = movementRepository.findByType(type);
+        List<MovementResponseDTO> list = new ArrayList<>();
+        for (Movement movement : movements) {
+            MovementResponseDTO response = new MovementResponseDTO();
+            response.setId(movement.getId());
+            response.setType(movement.getType());
+            response.setAmount(movement.getAmount());
+            response.setDate(movement.getDate());
+            response.setDescription(movement.getDescription());
+            response.setProductId(movement.getProduct().getId());
+            response.setProductName(movement.getProduct().getName());
+            response.setUserName(movement.getUser().getName());
+            list.add(response);
+        }
+        return list;
+    }
+
+
+//----------------------------------------------------------------------------------------------
+    // Get movement By Date
+
+    public List<MovementResponseDTO> getMovementsByDateRange(LocalDateTime start, LocalDateTime end) {
+        List<Movement> movements = movementRepository.findByDateBetween(start, end);
+        List<MovementResponseDTO> list = new ArrayList<>();
+        for (Movement movement : movements) {
+            MovementResponseDTO response = new MovementResponseDTO();
+            response.setId(movement.getId());
+            response.setType(movement.getType());
+            response.setAmount(movement.getAmount());
+            response.setDate(movement.getDate());
+            response.setDescription(movement.getDescription());
+            response.setProductId(movement.getProduct().getId());
+            response.setProductName(movement.getProduct().getName());
+            response.setUserName(movement.getUser().getName());
+            list.add(response);
+        }
+        return list;
+    }   
+
+
+//----------------------------------------------------------------------------------------------    
+    // Get movement by Product ID
+
+    public List<MovementResponseDTO> getMovementsByProductId(Long productId) {
+    List<Movement> movements = movementRepository.findByProductId(productId);
+    List<MovementResponseDTO> listResponse = new ArrayList<>();
+
+    for (Movement movement : movements) {
+        MovementResponseDTO response = new MovementResponseDTO();
+        response.setId(movement.getId());
+        response.setType(movement.getType());
+        response.setAmount(movement.getAmount());
+        response.setDate(movement.getDate());
+        response.setDescription(movement.getDescription());
+        response.setProductId(movement.getProduct().getId());
+        response.setProductName(movement.getProduct().getName());
+        response.setUserName(movement.getUser().getName());
+
+        listResponse.add(response);
+    }
+    return listResponse;
+}
+
+
+//----------------------------------------------------------------------------------------------
+    // Get movement by ID
+
+    public Optional<MovementResponseDTO> getMovementById(Long id) {
+        Optional<Movement> optional = movementRepository.findById(id);
+
+        if (optional.isPresent()) {
+            Movement movement = optional.get();
+            MovementResponseDTO response = new MovementResponseDTO();
+            response.setId(movement.getId());
+            response.setType(movement.getType());
+            response.setAmount(movement.getAmount());
+            response.setDate(movement.getDate());
+            response.setDescription(movement.getDescription());
+            response.setProductId(movement.getProduct().getId());
+            response.setProductName(movement.getProduct().getName());
+            response.setUserName(movement.getUser().getName());
+            return Optional.of(response);
+        }
+        return Optional.empty();
+    }
+
 }
