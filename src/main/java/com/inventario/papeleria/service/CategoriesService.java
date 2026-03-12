@@ -2,6 +2,7 @@ package com.inventario.papeleria.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -54,5 +55,75 @@ public class CategoriesService {
 
     }
 
+    //----------------------------------------------------------------------------------------------
+    //Get By ID categories
 
+    public Optional<CategoriesResponseDTO> getCategoryById(Long id){
+        Optional<Categories> optionalCategory = categoriesRepository.findById(id);
+
+        if (optionalCategory.isPresent()) {
+            Categories category = optionalCategory.get();
+            CategoriesResponseDTO response = new CategoriesResponseDTO();
+
+            // mapeop de datos de la entidad al DTO
+
+            response.setId(category.getId());
+            response.setName(category.getName());
+            response.setDescription(category.getDescription());
+
+            return Optional.of(response);
+        } else{
+
+            System.out.println("Cateogira no encontrada");
+            return Optional.empty();
+
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------
+    //Get By Name categories
+
+
+        public Optional<CategoriesResponseDTO> getCategoryByName(String name){
+        Optional<Categories> optionalCategory = categoriesRepository.findByName(name);
+
+        if (optionalCategory.isPresent()) {
+            Categories category = optionalCategory.get();
+            CategoriesResponseDTO response = new CategoriesResponseDTO();
+
+            // mapeop de datos de la entidad al DTO
+
+            response.setId(category.getId());
+            response.setName(category.getName());
+            response.setDescription(category.getDescription());
+
+            return Optional.of(response);
+        } else{
+
+            return Optional.empty();
+
+        }
+    }
+
+//----------------------------------------------------------------------------------------------
+    //Update categories
+
+    public CategoriesResponseDTO updateCategory(Long id, CategoriesRequestDTO categoriesRequestDTO){
+        Categories categories = categoriesRepository.findById(id).orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+        
+        if (categoriesRequestDTO.getName() != null) {
+            categories.setName(categoriesRequestDTO.getName());            
+        }
+        if (categoriesRequestDTO.getDescription() != null) {
+            categories.setDescription(categoriesRequestDTO.getDescription());
+        }
+        
+        categoriesRepository.save(categories);
+        CategoriesResponseDTO response = new CategoriesResponseDTO();
+        response.setId(categories.getId());
+        response.setName(categories.getName());
+        response.setDescription(categories.getDescription());
+
+        return response;
+    }
 }
