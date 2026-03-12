@@ -105,7 +105,25 @@ public class CategoriesService {
         }
     }
 
-    
+//----------------------------------------------------------------------------------------------
+    //Update categories
 
+    public CategoriesResponseDTO updateCategory(Long id, CategoriesRequestDTO categoriesRequestDTO){
+        Categories categories = categoriesRepository.findById(id).orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+        
+        if (categoriesRequestDTO.getName() != null) {
+            categories.setName(categoriesRequestDTO.getName());            
+        }
+        if (categoriesRequestDTO.getDescription() != null) {
+            categories.setDescription(categoriesRequestDTO.getDescription());
+        }
+        
+        categoriesRepository.save(categories);
+        CategoriesResponseDTO response = new CategoriesResponseDTO();
+        response.setId(categories.getId());
+        response.setName(categories.getName());
+        response.setDescription(categories.getDescription());
 
+        return response;
+    }
 }
