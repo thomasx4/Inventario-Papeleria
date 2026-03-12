@@ -168,4 +168,48 @@ public class MovementService {
         return Optional.empty();
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Update movement
+
+    public MovementResponseDTO updateMovement(Long id, MovementRequestDTO dto) {
+        Movement movement = movementRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movimiento no encontrado"));
+
+        if (dto.getType() != null) movement.setType(dto.getType());
+        if (dto.getAmount() != 0) movement.setAmount(dto.getAmount());
+        if (dto.getDescription() != null) movement.setDescription(dto.getDescription());
+        
+        if (dto.getProductId() != null) {
+            movement.setProduct(productRepository.findById(dto.getProductId())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado")));
+        }
+
+        movementRepository.save(movement);
+
+        MovementResponseDTO response = new MovementResponseDTO();
+        response.setId(movement.getId());
+        response.setType(movement.getType());
+        response.setAmount(movement.getAmount());
+        response.setDate(movement.getDate());
+        response.setDescription(movement.getDescription());
+        response.setProductId(movement.getProduct().getId());
+        response.setProductName(movement.getProduct().getName());
+        response.setUserName(movement.getUser().getName());
+
+        return response;
+    }
+
+
+//----------------------------------------------------------------------------------------------
+    // Delete movement
+
+    public void deleteMovement(Long id) {
+        Movement movement = movementRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movimiento no encontrado"));
+
+        movementRepository.delete(movement);
+        
+    }
+
+
 }
